@@ -1,0 +1,27 @@
+"use server";
+
+import "../../envConfig";
+import { decrypt } from "../lib/session";
+import { cookies } from "next/headers";
+
+export async function getDataDashboard(payload) {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+  const headers = new Headers();
+  headers.append("Authorization", session?.userId);
+  headers.append("Content-Type", "application/json");
+
+  const res = await fetch(`${process.env.BACKEND_URL}/dashboard/data`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    return { status: 500, message: "Terjadi kesalahan jaringan", data: {} };
+  }
+
+  return { status: json.statusCode, message: json.message, data: json.data };
+}
