@@ -137,6 +137,15 @@ export default function TugasDetailPage() {
     }
   };
 
+  const getTanggalIndonesia = () => {
+    const formatter = new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    return formatter.format(new Date());
+  };
+
   const isExpired =
     dataTugas?.tanggal_selesai &&
     moment(dataTugas.tanggal_selesai).tz("Asia/Jakarta").isBefore(moment());
@@ -287,7 +296,7 @@ export default function TugasDetailPage() {
     const content = contentRef.current;
 
     const options = {
-      filename: "laporan-guru.pdf",
+      filename: "laporan-Nilai-Tugas-Siswa.pdf",
       margin: 1,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
@@ -830,6 +839,19 @@ export default function TugasDetailPage() {
               return avg.toFixed(2);
             })()}
           </div>
+           {/* Tanda Tangan Kepala Sekolah */}
+                  <div className="flex justify-end">
+                    <div className="flex flex-col items-start text-left">
+                       <span className="font-normal mt-1">
+                        Surantih, {getTanggalIndonesia()}
+                      </span>
+                      <h1 className="font-normal mt-1">Kepala Sekolah</h1>
+                      <div className="mt-11 w-48 border-b border-black">
+                        <p className="font-bold mt-1">YULIWARMAN, S.Pd</p>
+                      </div>
+                      <p className="text-sm">NIP. 19700722 199512 1 001</p>
+                    </div>
+                  </div>
         </div>
       </div>
       <Dialog onClose={handleClose} open={openConfirm}>
